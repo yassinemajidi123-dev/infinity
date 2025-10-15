@@ -1,43 +1,49 @@
 /* --- PHONE OVERRIDES --- */
 @media (max-width: 900px) {
-  /* Fixed, glossy bar + iOS stability */
+  /* Header (fixed + blur; stays on top) */
   .nav.nav-purple {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 1000;
+    z-index: 3000;
     background: rgba(20,16,52,.92);
     -webkit-backdrop-filter: saturate(180%) blur(10px);
     backdrop-filter: saturate(180%) blur(10px);
     border-bottom: 1px solid rgba(255,255,255,.08);
 
-    isolation: isolate;                  /* prevent blending glitches */
-    -webkit-transform: translateZ(0);    /* own GPU layer */
+    isolation: isolate;
+    -webkit-transform: translateZ(0);
     transform: translateZ(0);
     backface-visibility: hidden;
+  }
+  /* Solid when open (prevents line through the logo) */
+  .nav.nav-purple.is-open {
+    background: rgba(20,16,52,1);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* Push content below fixed bar */
   body { padding-top: calc(50px + env(safe-area-inset-top)); }
 
-  /* Top row layout, with reserved space for the hamburger */
+  /* Row layout */
   .nav-wrap {
     position: relative;
     display: flex;
     align-items: center;
     height: calc(50px + env(safe-area-inset-top));
     padding: calc(8px + env(safe-area-inset-top)) 14px 6px;
-    padding-right: 44px; /* reserve right-side space for the toggle */
+    padding-right: 44px; /* reserve space for toggle */
   }
 
   /* Hide desktop menu on phone */
   .nav.nav-purple .menu { display: none !important; }
 
-  /* Logo (small) + anti-flicker */
+  /* Logo (small + anti-flicker) */
   .brand { display: flex; align-items: center; overflow: visible; }
   .brand-logo-wrap { overflow: visible; }
   .brand-logo {
     display: block;
-    height: 40px !important;     /* tweak 18–22px to preference */
+    height: 20px !important; /* adjust 18–22px if needed */
     width: auto;
     position: relative;
     z-index: 1;
@@ -47,10 +53,10 @@
     image-rendering: -webkit-optimize-contrast;
   }
 
-  /* Hamburger pinned INSIDE the bar on the right */
+  /* Hamburger pinned inside-right */
   .nav-toggle {
     position: absolute;
-    right: 12px;                 /* adjust spacing from edge */
+    right: 12px;               /* tweak spacing from edge */
     top: 50%;
     transform: translateY(-50%);
     display: inline-flex !important;
@@ -59,16 +65,18 @@
     appearance: none;
     background: transparent;
     border: 0;
-    padding: 10px;               /* comfortable tap target */
+    padding: 10px;
     margin: 0;
     cursor: pointer;
   }
   .nav-toggle span {
     width: 26px; height: 2px;
-    background: #fff;
-    border-radius: 2px;
-    display: block;
+    background: #fff; border-radius: 2px; display: block;
   }
+
+  /* Layering */
+  .nav-backdrop { z-index: 2000; }
+  .nav-drawer   { z-index: 2500; }
 
   /* Backdrop */
   .nav-backdrop {
@@ -102,11 +110,38 @@
     font-weight: 600;
   }
   .nav-drawer a.active { background: rgba(255,255,255,.12); }
+
+  /* Buttons in drawer */
   .nav-drawer .btn { text-align: center; margin: 6px 10px; }
-  .nav-drawer .btn.ghost {
-    background: transparent;
+
+  /* 👉 Colored Contact button (mobile) */
+  .nav-drawer .btn.ghost,
+  .nav.nav-purple .menu .btn.ghost {
+    background: linear-gradient(135deg, #67d1ff, #1a18a6);
+    color: #0b0b1a;
+    border: none;
+    box-shadow: 0 6px 18px rgba(126,123,255,.35); 
+  }
+  .nav-drawer .btn.ghost:hover,
+  .nav.nav-purple .menu .btn.ghost:hover {
+    filter: brightness(1.05);
+  }
+  .nav-drawer .btn.ghost:active,
+  .nav.nav-purple .menu .btn.ghost:active {
+    transform: translateY(1px);
+  }
+
+  .nav-drawer .btn.ghost.alt-solid { /* optional solid variant */
+    background: #7e7bff;
     color: #fff;
-    border: 1px solid rgba(255,255,255,.2);
+    box-shadow: 0 6px 18px rgba(126,123,255,.35);
+  }
+
+  /* Instagram row tidy */
+  .nav-drawer a.social-ig { display: flex; align-items: center; gap: 10px; }
+  .nav-drawer a.social-ig svg {
+    width: 22px; height: 22px; flex: 0 0 22px;
+    color: #fff; opacity: .95; /* requires fill="currentColor" in SVG */
   }
 
   .drawer-safe { height: env(safe-area-inset-bottom); }
